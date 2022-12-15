@@ -1,0 +1,111 @@
+###############################################################################
+# 0. Loading packages
+###############################################################################
+require(dplyr)
+require(tidyverse)
+list.files("C:/Users/IDO/Dropbox/Github/Rpkgs/refineR/R", full.names = T) %>% walk(source)
+list.files("C:/Users/IDO/Dropbox/Github/Rpkgs/Stats/R", full.names = T) %>% walk(source)
+
+
+
+
+###############################################################################
+# 1. Loading data
+###############################################################################
+load("C:/Users/IDO/Dropbox/Github/Rpkgs/Papers/data/ADNI___RS.fMRI___Group_CN.RDA")
+load("C:/Users/IDO/Dropbox/Github/Rpkgs/Papers/data/ADNI___RS.fMRI___Group_MCI.RDA")
+load("C:/Users/IDO/Dropbox/Github/Rpkgs/Papers/data/ADNI___RS.fMRI___Group_EMCI.RDA")
+load("C:/Users/IDO/Dropbox/Github/Rpkgs/Papers/data/ADNI___RS.fMRI___Group_LMCI.RDA")
+load("C:/Users/IDO/Dropbox/Github/Rpkgs/Papers/data/ADNI___RS.fMRI___Group_AD.RDA")
+
+data_CN = ADNI___RS.fMRI___Group_CN
+data_AD = ADNI___RS.fMRI___Group_AD
+data_MCI = ADNI___RS.fMRI___Group_MCI
+data_EMCI = ADNI___RS.fMRI___Group_EMCI
+data_LMCI = ADNI___RS.fMRI___Group_LMCI
+
+
+
+
+###############################################################################
+# 2. Extracting functional connectivity matrix
+###############################################################################
+Data.list = list()
+
+
+### CN
+Data.list[[1]] = CorrMat_CN.list = lapply(data_CN, FUN=function(ith_data){
+  list(ith_data[[1]],ith_data[[3]][[1]])
+})
+
+### AD
+Data.list[[2]] = CorrMat_AD.list = lapply(data_AD, FUN=function(ith_data){
+  list(ith_data[[1]],ith_data[[3]][[1]])
+})
+
+### MCI
+Data.list[[3]] = CorrMat_MCI.list = lapply(data_MCI, FUN=function(ith_data){
+  list(ith_data[[1]],ith_data[[3]][[1]])
+})
+
+### EMCI
+Data.list[[4]] = CorrMat_EMCI.list = lapply(data_EMCI, FUN=function(ith_data){
+  list(ith_data[[1]],ith_data[[3]][[1]])
+})
+
+### LMCI
+Data.list[[5]] = CorrMat_LMCI.list = lapply(data_LMCI, FUN=function(ith_data){
+  list(ith_data[[1]],ith_data[[3]][[1]])
+})
+
+### Each Sample size
+SampleSize = sapply(Data.list, FUN=function(ith_data){
+  length(ith_data)
+})
+names(SampleSize) = c("CN", "AD", "MCI", "EMCI", "LMCI")
+
+
+
+
+
+###############################################################################
+# 3.Combine Data
+###############################################################################
+Combined_CorrMat_CN.list = CorrMat_CN.list
+Combined_CorrMat_MCI.list = c(CorrMat_MCI.list, CorrMat_EMCI.list, CorrMat_LMCI.list)
+length(Combined_CorrMat_CN.list)
+length(Combined_CorrMat_MCI.list)
+
+age = sapply(Combined_CorrMat_CN.list, FUN=function(y){
+  y[[1]]$SEX
+})
+table(age)
+
+age = sapply(Combined_CorrMat_MCI.list, FUN=function(y){
+  y[[1]]$SEX
+})
+mean(age)
+sd(age)
+
+
+
+
+###############################################################################
+# 4.Combine Data
+###############################################################################
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
